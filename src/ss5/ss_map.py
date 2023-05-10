@@ -12,6 +12,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import matplotlib
 matplotlib.use('TkAgg')
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 # Location of inputs
@@ -36,8 +37,6 @@ def plot(w_geo, w_pop, w_trs):
     cax.axes.get_xaxis().set_visible(False)
     cax.axes.get_yaxis().set_visible(False)
     
-    canvas.draw()
-
     return ss_map          
 
 
@@ -59,6 +58,30 @@ def exiting():
         pass
 
 
+def update_geo(x):
+    """
+    Updates scale_label and canvas.
+
+    Parameters
+    ----------
+    x : str.
+        Number.
+
+    Returns
+    -------
+    None.
+
+    """
+    
+    wg = int(float(scale1.get()))
+    scale1_label.config(text='power=' + str(wg))
+    weight_geo(wg)
+    
+def weight_geo(wg):
+    global w0
+    if w0 != wg:
+        w_geo = fw.weight(data_geo, wg)
+        
 def update(data):
     """
     Updates scale_label and canvas.
@@ -82,18 +105,17 @@ def update(data):
 
     wt = int(float(scale3.get()))
     #scale2_label.config(text='power=' + str(wt))
-
-    w_geo = fw.weight(data_geo, wg)
-    w_pop = fw.weight(data_pop, wp)
-    w_trs = fw.weight(data_trs, wt)  
+    
+    global w0
+    if w0 != wg:
+        w_geo = fw.weight(data_geo, wg)
+   #w_pop = fw.weight(data_pop, wp)
+    #w_trs = fw.weight(data_trs, wt)  
     
     
     plot(w_geo, w_pop, w_trs)
 
-
-# Initialise figure
-figure = matplotlib.pyplot.figure(figsize=(7, 7))
-        
+      
 # Initialise data : geology, population and transport suitability factors
 data_geo = io.read_data(geo)
 data_pop = io.read_data(pop)
@@ -113,40 +135,46 @@ for i in range(0,3):
     ax[i].set_axis_off()    
 
 # Plot, write data and map to file
-ss_map = plot(data_geo, data_pop, data_trs)
-plt.savefig('../../data/output/ss_map.jpg')
-io.write_data('../../data/output/ss_map.txt', ss_map)
-print("write data")
+#ss_map = plot(w_geo, w_pop, w_trs)
+#plt.savefig('../../data/output/ss_map.jpg')
+#io.write_data('../../data/output/ss_map.txt', ss_map)
+#print("write data")
 
-# Create the tkinter window
+
+
+     
 root = tk.Tk()
+l = tk.Label(self, text="Move sliders to choose weightage 1-10 for each factor to apply changes", anchor="c")
+l.pack(side="top", fill="both", expand=True)
+        
 
 # Create a canvas to display the figure
-canvas = matplotlib.backends.backend_tkagg.FigureCanvasTkAgg(figure, master=root)
+canvas = FigureCanvasTkAgg(f, master=root)
 canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
 # Create sliders
-scale1 = ttk.Scale(root, from_=1, to=10, command=update(data_geo))
-#scale1_label = ttk.label(root, text= 'Slider for geo')
+scale1 = ttk.Scale(root, from_=1, to=10), command=update(data_geo))
+scale1_label = ttk.Label(root, text= 'Geology')
+
+scale2 = ttk.Scale(root, from_=1, to=10), command=update)
+scale2_label = ttk.Label(root, text= 'Population')
+
+scale3 = ttk.Scale(root, from_=1, to=10), command=update)
+scale3_label = ttk.Label(root, text= 'Transportation')
+
+# Create window title
+root.title("Site Suitability Map")
+
+# Pack widgets
 scale1.pack()
-
-scale2 = ttk.Scale(root, from_=1, to=10, command=update(data_pop))
-#scale2_label = ttk.label(root, text= 'Slider for pop')
+scale1_label.pack()
 scale2.pack()
-
-scale3 = ttk.Scale(root, from_=1, to=10, command=update(data_trs))
-#scale3_label = ttk.label(root, text= 'Slider for trs')
+scale2_label.pack()
 scale3.pack()
+scale3_label.pack()
 
-# Create a Button widget and link this with the exiting function
-exit_button = ttk.Button(root, text="Exit", command=exiting)
-exit_button.pack()
-
-# Exit if the window is closed.
-root.protocol('WM_DELETE_WINDOW', exiting)
-
-# Start the GUI
-root.mainloop()  
+root.pack(side="top", fill="both", expand=True)
+root.mainloop()
 
 
 

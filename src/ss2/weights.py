@@ -49,8 +49,6 @@ data_geo = read_data(geo)
 data_pop = read_data(pop)
 data_trs = read_data(trs)
 
-
-
 # Plot all three site suitability factors (un-weighted)
 f, ax = plt.subplots(1,3)
 label = ["Geology", "Population", "Transportation"]
