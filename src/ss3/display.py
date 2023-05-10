@@ -131,9 +131,9 @@ for i in range(0,3):
     
 
 # Initialise weights
-wg = 1
+wg = 2
 wp = 2
-wt = 3    
+wt = 5    
 
 # Initilialise weighted factors' lists
 w_geo = []

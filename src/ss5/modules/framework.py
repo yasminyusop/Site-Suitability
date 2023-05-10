@@ -30,7 +30,15 @@ def weight(data, weight):
         w_data.append(w_row)
     return w_data
 
-
+def combine(x, y, z, wx, wy, wz):
+    result = []
+    for r in range(len(x)):
+        rr = []
+        result.append(rr)
+        for c in range(len(x[0])):
+            rr.append(x[r][c]*wx + y[r][c]*wy + z[r][c]*wz)
+    return result
+    
 
 def rescale(suit):
     """
