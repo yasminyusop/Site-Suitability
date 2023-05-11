@@ -3,9 +3,9 @@
 
 INTRODUCTION
 
-	This software have been developed as part of the GEOG5990 Programming for Geographical Information Analysis: Core Skills of the University of Leeds. The objective is to develop a software to identify site suitability based on three factors: geology, population and transportation. 
+This software have been developed as part of the GEOG5990 Programming for Geographical Information Analysis: Core Skills of the University of Leeds. The objective is to develop a software to identify site suitability based on three factors: geology, population and transportation. 
 
-	The following document contains details of the software development. For details on using the the software please refer to Site Suitability Map user guide (ss_userguide.pdf).    
+The following document contains details of the software development. For details on using the the software please refer to Site Suitability Map user guide (ss_userguide.pdf).    
 
 
 CONTACT
@@ -37,15 +37,18 @@ The software was developed on:
 
 MANIFEST
 
-data/input 
-data/ouput
-src/ss1
-src/ss2
-src/ss3
-src/ss4
-src/ss5
-LICENSE
-README
+The following are files and folders in the Site-Suitability folder. Source codes are located in the src folders and the development of these are detailed out in this document.
+
+* data/input 
+* data/ouput
+* src/ss1
+* src/ss2
+* src/ss3
+* src/ss4
+* src/ss5
+* LICENSE
+* README
+* ss_userguide
 
 
 
@@ -53,9 +56,9 @@ DATA SOURCE
 
 To develop this software, 3 different rasters in CSV format were provided by the School of Geography, University of Leeds. The following files are located in the .../.../data/input folder:
 
-	1. geology.txt
-	2. population.txt
-	3. transport.txt
+* geology.txt
+* population.txt
+* transport.txt
 
 
 
@@ -82,19 +85,19 @@ Every set of codes were built on the previous one with adjustments and improveme
 2. APPLY WEIGHTS AND CREATE RESCALED SITE SUITABILITY MAP (ss2)
 
 	In a suitability assessment, different weights are applied to suitability factors in order of importance. Higher weightage for factors that are more important, lower weightage for factors that are less important. In this section, random weights between 1 to 10 were assigned to each weight factor using the randint() function. 
+	
 	Weights:
 	wg: weight for geology factor
 	wp: weight for population factor
 	wt: weight for transportation factor
 
-Using a series of loops, each factor was multiplied with the corresponding weight to obtain weighted factor rasters. 
+	Using a series of loops, each factor was multiplied with the corresponding weight to obtain weighted factor rasters. 
 
 	Next, to obtain an unscaled suitability map, the three weighted factors are added together. Lastly, the scales were standardised to (0,255) based on the following equation:
 	
-	Rescaled suitability map = ((Unscaled suitability map - Minimum value) /
-					   (Maximum value - Minimum value)) * 255
+	Rescaled suitability map = ((Unscaled suitability map - Minimum value) / (Maximum value - Minimum value)) * 255
 
-To achieve the above, the maximum and minimum values were first derived prior to rescaling. 
+	To achieve the above, the maximum and minimum values were first derived prior to rescaling. 
 
 	To test the lines of codes developed for the above are working, a series of plots were done at every stage (weights, combining factors and rescaling). The plots include colorbars which helped verify that the calculations were done correctly. The built-in Yellow-Green (YlGn) colormap was used for this project where yellow corresponds to low suitability and green corresponds to high suitability. The plots were also compared against different applied weightages. 
 
@@ -107,6 +110,7 @@ To achieve the above, the maximum and minimum values were first derived prior to
 4. CODE OPTIMISATION AND SIMPLIFICATION (ss4)
 
 	To optimise and simplify the main source code, a sub-folder named modules was created to store different function codes. The codes have also been generalised to allow usage on other applications.
+	
 	io.py: stores read_data() and write_data() functions to read and write CSV files
 	framework.py: stores combine() and rescale()
 
@@ -120,19 +124,40 @@ To achieve the above, the maximum and minimum values were first derived prior to
 CHALLENGES
 
 The following were among the challenges encountered while developing this software:
-	1. Manipulating list of lists using loops - this initially led to an incorrect calculation in combining the weighted factors and subsequently caused the final map not to be displayed correctly or even unable to be displayed.
+
+	1. Manipulating list of lists using zip() function - this led to an incorrect calculation in combining the weighted factors and subsequently caused the final map not to be displayed correctly or even unable to be displayed. This error was not identified earlier as testing was done on only one set of weights. The error was identified when different sets of weights were used for plotting and no change was observed in the plots.  
+
 	2. Programming the software to retrieve the weights from scales which are called into the plot() function - the initial plot() function called for more variables like input data. The codes were revised several times to only have the weights as variables.
-	3. Management of GUI widgets and layout - the placement of codes for the widgets resulted in some widgets not being displayed. The codes for the widgets were finally arranged according to view from top to bottom. 
+
+	3. Management of GUI widgets and layout - the placement of codes for the widgets resulted in some widgets not being displayed. The codes for the widgets were finally arranged according to view from top to bottom. Additionally, adding the function figure.clear() ensured that the software cleared the earlier plot so that the new plot is visible.
+
 	4. Displaying suitable colorbar - the preferred colorbar for the suitability map is Red-Yellow-Green which is not available as a default colormap in the matplotlib library. The 'YlGn' colormap was chosen instead where Yellow represents low suitabililty and Green is high suitability.
+
 	5. Plot not displaying on GUI - this was due to two reasons. Firstly was because of the incorrect calculation mentioned previously. Secondly was due to the presence of two matplotlib plots. After removing the interim map, the final suitability map was successfully displayed.
    	
 
 FURTHER IMPROVEMENTS
-1. Colorbar colormap
-2. Explore other modules like pandas or numpy 
-3. divided into classes
-4. save function to include weights
+
+	1. Colorbar colormap - to have the preferred visualisation of the output, a customised colormap will need to be developed which is Red-Yellow-Green and data statistically classified into the different colors with Red being low suitability and Green being high suitability. 
+
+	2. Explore other python modules like pandas or numpy - as an alternative to using loops.
+
+	3. Develop a code and widget on the GUI to source input data from other files. 
+
+	4. Develop a code for Save() function to rename the output image based on weights applied.
+
 
 REFERENCES
+
+* Main reference used for the development of this software was from the module's learning page by Turner, A., 2023. https://agdturner.github.io/GEOG5990/home/index.html
+* Matplotlib documentation. https://matplotlib.org/
+* Tkinter documentation. https://docs.python.org/3/library/tkinter.html
+* Stack Overflow forum. https://stackoverflow.com/
+* GitHub. https://github.com/
+
+
 ACKNOWLEDGEMENTS
+
+I would like to thank the module leader, Andy Turner for the guidance and support throughout the course of the module and the development of this software as part of the module's project.
+
 
