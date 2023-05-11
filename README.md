@@ -149,6 +149,8 @@ The following were among the challenges encountered while developing this softwa
 
 4. Develop a code for Save() function to rename the output image based on weights applied.
 
+5. For reproducibility, lines of codes linked to the development of the GUI can be placed under a Class. 
+
 
 
 *REFERENCES*
