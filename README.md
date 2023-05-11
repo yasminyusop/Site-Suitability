@@ -8,24 +8,24 @@ This software have been developed as part of the GEOG5990 Programming for Geogra
 The following document contains details of the software development. For details on using the the software please refer to Site Suitability Map user guide (ss_userguide.pdf).    
 
 
-CONTACT
+*CONTACT*
 
 Any questions or comments can be emailed to the author, yasminyusop or Farah Yasmin at her university's email address: gy22fybm@leeds.ac.uk
 
 
-GITHUB
+*GITHUB*
 
 The latest version of the programming can be found on GitHub:
 
 https://github.com/yasminyusop/Site-Suitability.git
 
 
-LICENSE
+*LICENSE*
 
 This project uses an MIT license, a permissive license which allows other users to use the software for commercial and private use including making distributios and modifications with the copyright notice (Ref.: LICENSE)
 
 
-CONFIGURATION
+*CONFIGURATION*
 
 The software was developed on:
 * Spyder version: 5.2.2 None
@@ -35,7 +35,7 @@ The software was developed on:
 * Operating System: Windows 10
 
 
-MANIFEST
+*MANIFEST*
 
 The following are files and folders in the Site-Suitability folder. Source codes are located in the src folders and the development of these are detailed out in this document.
 
@@ -52,7 +52,7 @@ The following are files and folders in the Site-Suitability folder. Source codes
 
 
 
-DATA SOURCE
+*DATA SOURCE*
 
 To develop this software, 3 different rasters in CSV format were provided by the School of Geography, University of Leeds. The following files are located in the .../.../data/input folder:
 
@@ -62,7 +62,7 @@ To develop this software, 3 different rasters in CSV format were provided by the
 
 
 
-SOFTWARE DEVELOPMENT
+*SOFTWARE DEVELOPMENT*
 
 The development of the software was divided into five parts: 
 	1. Reading and plotting of 3 raster data (factors).
@@ -122,7 +122,8 @@ Every set of codes were built on the previous one with adjustments and improveme
 	For the development of the GUI, the Tkinter module was used. This interface allows users to select the weights from 1-10 for each suitability factor using sliders. The software calculates and plots rescaled suitability maps. Changes can be seen on the go. The function update() retrieves the different user-applied weights from sliders and calls for the plot() function which then plots the output on the GUI. The value of each weight is shown on the GUI for user's reference. The GUI also allows user to save the output map as .jpg in the .../.../data/output folder. 
 
 
-CHALLENGES
+
+*CHALLENGES*
 
 The following were among the challenges encountered while developing this software:
 
@@ -137,7 +138,8 @@ The following were among the challenges encountered while developing this softwa
 5. Plot not displaying on GUI - this was due to two reasons. Firstly was because of the incorrect calculation mentioned previously. Secondly was due to the presence of two matplotlib plots. After removing the interim map, the final suitability map was successfully displayed.
    	
 
-FURTHER IMPROVEMENTS
+
+*FURTHER IMPROVEMENTS*
 
 1. Colorbar colormap - to have the preferred visualisation of the output, a customised colormap will need to be developed which is Red-Yellow-Green and data statistically classified into the different colors with Red being low suitability and Green being high suitability. 
 
@@ -148,7 +150,8 @@ FURTHER IMPROVEMENTS
 4. Develop a code for Save() function to rename the output image based on weights applied.
 
 
-REFERENCES
+
+*REFERENCES*
 
 * Main reference used for the development of this software was from the module's learning page by Turner, A., 2023. https://agdturner.github.io/GEOG5990/home/index.html
 * Matplotlib documentation. https://matplotlib.org/
@@ -157,7 +160,8 @@ REFERENCES
 * GitHub. https://github.com/
 
 
-ACKNOWLEDGEMENTS
+
+*ACKNOWLEDGEMENTS*
 
 I would like to thank the module leader, Andy Turner for the guidance and support throughout the course of the module and the development of this software as part of the module's project.
 
