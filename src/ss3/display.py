@@ -6,8 +6,8 @@ Created on Tue May  9 09:45:39 2023
 """
 
 import csv
+import random
 import matplotlib.pyplot as plt
-
 
 
 
@@ -45,6 +45,20 @@ def read_data(path):
     return data
 
 def write_data(filename,data):
+    """
+    Writes and saves data into CSV format
+
+    Parameters
+    ----------
+    filename : location and name of file
+    data : data to be saved (list of lists)
+
+    Returns
+    -------
+    None.
+
+    """
+    
     # Open a file for writing
     f = open(filename, 'w', newline='')
     # Write a to the file
@@ -55,37 +69,46 @@ def write_data(filename,data):
     f.close() 
 
 
-def weight(data, weight):    
+def combine(data_geo, data_pop, data_trs, wg, wp, wt):    
     """
-    Applies weights to individual suitability factors.
+    Multiplies weights to individual suitability factors then adds the
+    weighted factors together.
    
-    Weighted factor = Factor x Weight
-    
+    Unscaled Suitability = (Weight1 x Factor1) + (Weight2 x Factor2) 
+                                + (Weight3 x Factor3)
+
     Parameters
     ----------
-    data1 : Input data source (list of lists)
-    data2 : Output data name (list of lists)
-    weight : Weight of the factor (integer)
+    data_geo : Suitability factor 1 (list of lists)
+    data_pop : Suitability factor 2 (list of lists)
+    data_trs : Suitability factor 3 (list of lists)
+    wg : Weight for factor 1 (integer)
+    wp : Weight for factor 2 (integer)
+    wt : Weight for factor 3 (integer)
 
     Returns
     -------
-    weighted suitability factor : list of lists
+    suit : list of lists
 
     """
-    w_data = []
-    for row in data:
-        w_row = []
-        for val in row:
-            w_row.append(val*weight)
-        w_data.append(w_row)
-    return w_data    
+    suit = []
+    for row in range(len(data_geo)):
+        row_suit = []
+        suit.append(row_suit)
+        for val in range(len(data_geo[0])):
+            row_suit.append(data_geo[row][val]*wg + data_pop[row][val]*wp + 
+                            data_trs[row][val]*wt)
+    
+    return suit
 
 def rescale(suit):
     """
     Standardised scales to (0,255):
         1. Find max value
         2. Rescale to (0,255) using
-            (data / max value) * 255
+            ((data - min value) / (max value - value)) * 255
+            
+            where min value = 0
 
     Parameters
     ----------
@@ -101,80 +124,82 @@ def rescale(suit):
             max_row = max(row)
             max_suit = max(max_suit, max_row)
     #print("max", max_suit)
-        
+    
+    # Find min value
+    min_suit = 0
+    for row in suit:
+        min_row = min(row)
+        for val in row:
+            min_suit = min(min_suit, min_row)
+    #print("min", min_suit)    
+    
     # Rescale to (0,255)
     suit_map = []
     for row in suit:
         row_suit = []
         for val in row:
-            row_suit.append((val / max_suit) * 255)
+            row_suit.append((val - min_suit) / (max_suit - min_suit) * 255)
         suit_map.append(row_suit)
     
     return suit_map        
         
+
+
 # Read and import site suitability factors: geology, population and transport
 data_geo = read_data(geo)
 data_pop = read_data(pop)
 data_trs = read_data(trs)
 
-
-
 # Plot all three site suitability factors (un-weighted)
-f, ax = plt.subplots(1,3)
-label = ["Geology", "Population", "Transportation"]
-data = [data_geo, data_pop, data_trs]
+#f, ax = plt.subplots(1,3)
+#label = ["Geology", "Population", "Transportation"]
+#data = [data_geo, data_pop, data_trs]
 
-for i in range(0,3):
-    ax[i].imshow(data[i])
-    ax[i].set_title(label[i])
-    ax[i].set_axis_off()
+#for i in range(0,3):
+    #ax[i].imshow(data[i])
+    #ax[i].set_title(label[i])
+    #ax[i].set_axis_off()
     
 
+
 # Initialise weights
-wg = 2
-wp = 2
-wt = 5    
+wg = random.randint(1, 10)
+wp = random.randint(1, 10)
+wt = random.randint(1, 10)    
+print('wg', wg)
+print('wp', wp)
+print('wt', wt) 
 
-# Initilialise weighted factors' lists
-w_geo = []
-w_pop = []
-w_trs = []
 
-# Apply weights
-w_geo = weight(data_geo, wg)
-w_pop = weight(data_pop, wp)
-w_trs = weight(data_trs, wt)
 
-# Plot one weighted factor with scale for QC
+# Combine all weighted factors
+suit = combine(data_geo, data_pop, data_trs, wg, wp, wt) 
+
+# Plot combined weighted factors
 #fig, ax = plt.subplots()
-#cax = ax.imshow(w_geo, cmap='YlGn') 
+#cax = ax.imshow(suit, cmap='YlGn') 
 #fig.colorbar(cax).set_label("Suitability", rotation=270) 
-#ax.set_title("Geology Weighted Factor")
+#ax.set_title("Combined Weighted Factors")
 #cax.axes.get_xaxis().set_visible(False)
 #cax.axes.get_yaxis().set_visible(False)
 
 
-# Combine all weighted factors through multiplication
-suit = []
-for i in zip(w_geo, w_pop, w_trs):
-    suit.append([x * y * z for x, y, z in zip(*i)]) 
          
 # Plot suitability map
-plot = rescale(suit)
+ss_map = rescale(suit) # rescale to (0,255)
 fig, ax = plt.subplots()
-cax = ax.imshow(plot, cmap='YlGn') 
+cax = ax.imshow(ss_map, cmap='YlGn') 
 fig.colorbar(cax).set_label("Suitability", rotation=270) 
 ax.set_title("Suitability Map")
 cax.axes.get_xaxis().set_visible(False)
 cax.axes.get_yaxis().set_visible(False)
-plt.savefig('../../data/output/ss_map.jpg')
+
+
 
 # Write data and map to file
-#def output():
-    # Write data
-print("write data")
-write_data('../../data/output/ss_map.txt', plot)
-    
+plt.savefig('../../data/output/ss_map.jpg')
+write_data('../../data/output/ss_map.txt', ss_map)
+print("write data")    
         
     
     

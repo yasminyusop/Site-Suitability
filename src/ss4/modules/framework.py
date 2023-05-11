@@ -5,61 +5,74 @@ Created on Tue May  9 12:09:58 2023
 @author: gy22fybm
 """
 
-def weight(data, weight):    
+def combine(x, y, z, wx, wy, wz):
     """
-    Applies weights to individual suitability factors.
+    Multiplies weights to individual suitability factors then adds the
+    weighted factors together.
    
-    Weighted factor = Factor x Weight
-    
+    Suitability = (Weight1 x Factor1) + (Weight2 x Factor2) 
+                    + (Weight3 x Factor3)
+
     Parameters
     ----------
-    data1 : Input data source (list of lists)
-    data2 : Output data name (list of lists)
-    weight : Weight of the factor (integer)
+    x : Suitability factor 1 (list of lists)
+    y : Suitability factor 2 (list of lists)
+    z : Suitability factor 3 (list of lists)
+    wx : Weight for factor 1 (integer)
+    wy : Weight for factor 2 (integer)
+    wz : Weight for factor 3 (integer)
 
     Returns
     -------
-    weighted suitability factor : list of lists
+    result : list of lists
 
     """
-    w_data = []
-    for row in data:
-        w_row = []
-        for val in row:
-            w_row.append(val*weight)
-        w_data.append(w_row)
-    return w_data
+    result = []
+    for r in range(len(x)):
+        rr = []
+        result.append(rr)
+        for c in range(len(x[0])):
+            rr.append(x[r][c]*wx + y[r][c]*wy + z[r][c]*wz)
+    return result
+    
 
-
-
-def rescale(suit):
+def rescale(data):
     """
     Standardised scales to (0,255):
-        1. Find max value
+        1. Find max and min value
         2. Rescale to (0,255) using
-            (data / max value) * 255
+            ((data - min value) / (max value - min value)) * 255          
 
     Parameters
     ----------
-    suit : combined weighted factors (list of lists)
+    data : data to be rescaled (list of lists)
 
     Returns
     -------
-    suit_map : combined weighted factors rescaled to (0,255) : list of lists
+    output : rescaled data to (0,255) : list of lists
     """
-    max_suit = 0
-    for row in suit:
+   
+    max_data = 0
+    for row in data:
+        max_row = max(row)
         for val in row:
-            max_row = max(row)
-            max_suit = max(max_suit, max_row)
-    #print("max", max_suit)
-        
-    # Rescale to (0,255)
-    suit_map = []
-    for row in suit:
-        row_suit = []
+            max_data = max(max_data, max_row)
+    #print("max", max_data)
+   
+    # Find min value
+    min_data = 0
+    for row in data:
+        min_row = min(row)
         for val in row:
-            row_suit.append((val / max_suit) * 255)
-        suit_map.append(row_suit)
+            min_data = min(min_data, min_row)
+    #print("min", min_data) 
     
-    return suit_map 
+    # Rescale to (0,255)
+    output = []
+    for row in data:
+        row_output = []
+        for val in row:
+            row_output.append((val - min_data) / (max_data - min_data) * 255)
+        output.append(row_output)
+    
+    return output 

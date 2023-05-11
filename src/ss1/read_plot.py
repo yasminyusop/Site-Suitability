@@ -6,7 +6,6 @@ Created on Thu May  4 11:57:20 2023
 """
 
 import csv
-import matplotlib
 import matplotlib.pyplot as plt
 
 
@@ -48,14 +47,10 @@ data_geo = read_data(geo)
 data_pop = read_data(pop)
 data_trs = read_data(trs)
 
+# Test to verify that data is loaded as list of lists
+data_geo_output = any(isinstance(i, list) for i in data_geo)
+print("Is data_geo a list of lists?", data_geo_output)
 
-# Plot one factor with scale for QC
-#fig, ax = plt.subplots()
-#cax = ax.imshow(data_geo, cmap='YlGn')   
-#fig.colorbar(cax).set_label("Suitability", rotation=270) 
-#ax.set_title("Geology Unweighted Factor")
-#cax.axes.get_xaxis().set_visible(False)
-#cax.axes.get_yaxis().set_visible(False)
 
 
 # Plot all three site suitability factors
@@ -67,3 +62,4 @@ for i in range(0,3):
     ax[i].imshow(data[i])
     ax[i].set_title(label[i])
     ax[i].set_axis_off()
+    

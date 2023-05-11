@@ -8,6 +8,8 @@ Created on Tue May  9 09:45:39 2023
 import modules.io as io
 import modules.framework as fw
 import matplotlib.pyplot as plt
+import random
+import time
 
 
 # Location of inputs
@@ -16,23 +18,31 @@ pop ='../../data/input/population.txt' # population
 trs ='../../data/input/transport.txt' # transport
 
 
-def plot(data_geo, data_pop, data_trs):
+def plot(wg, wp, wt):
+    """
+    Plots the site suitability map in (0,255) scale based on weights
 
- 
-    w_geo = []
-    w_pop = []
-    w_trs = []  
-    
-    # Apply weights
-    w_geo = fw.weight(data_geo, wg)
-    w_pop = fw.weight(data_pop, wp)
-    w_trs = fw.weight(data_trs, wt)
-    
-    # Combine all weighted factors through multiplication
-    suit = []
-    for i in zip(w_geo, w_pop, w_trs):
-        suit.append([x * y * z for x, y, z in zip(*i)]) 
-         
+    Parameters
+    ----------
+    wg : weight for geology factor
+    wp : weight for population factor
+    wt : weight for transportation factor
+
+
+    Returns
+    -------
+    ss_map : list of lists
+
+    """
+
+    # Read data from source files   
+    data_geo = io.read_data(geo)
+    data_pop = io.read_data(pop)
+    data_trs = io.read_data(trs)
+
+    # Apply weights and combine the three factors    
+    suit = fw.combine(data_geo, data_pop, data_trs, wg, wp, wt)
+             
     # Plot suitability map
     ss_map = fw.rescale(suit)
     fig, ax = plt.subplots()
@@ -41,43 +51,34 @@ def plot(data_geo, data_pop, data_trs):
     ax.set_title("Suitability Map")
     cax.axes.get_xaxis().set_visible(False)
     cax.axes.get_yaxis().set_visible(False)
-
-    return ss_map          
-
-
-        
-# Read and import site suitability factors: geology, population and transport
-data_geo = io.read_data(geo)
-data_pop = io.read_data(pop)
-data_trs = io.read_data(trs)
-
-
-
-# Plot all three site suitability factors (un-weighted)
-f, ax = plt.subplots(1,3)
-label = ["Geology", "Population", "Transportation"]
-data = [data_geo, data_pop, data_trs]
-
-for i in range(0,3):
-    ax[i].imshow(data[i])
-    ax[i].set_title(label[i])
-    ax[i].set_axis_off()
     
+    return ss_map    
+
+
+
+#start = time.perf_counter()
+
 
 
 # Initialise weights
-    wg = 1
-    wp = 2
-    wt = 3   
+wg = random.randint(1, 10)
+wp = random.randint(1, 10)
+wt = random.randint(1, 10)    
+print('wg', wg)
+print('wp', wp)
+print('wt', wt)  
 
 
 
 # Plot, write data and map to file
-ss_map = plot(data_geo, data_pop, data_trs)
+ss_map = plot(wg, wp, wt)
 plt.savefig('../../data/output/ss_map.jpg')
 io.write_data('../../data/output/ss_map.txt', ss_map)
 print("write data")
     
-        
+
+
+#end = time.perf_counter()        
+#print("Time taken to plot", end - start, "seconds")
     
     

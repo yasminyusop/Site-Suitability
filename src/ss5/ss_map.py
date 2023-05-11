@@ -15,14 +15,16 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-# Location of inputs
+# Location of data
 geo ='../../data/input/geology.txt' # geology
 pop ='../../data/input/population.txt' # population
 trs ='../../data/input/transport.txt' # transport
 
+
+
 def update(x):
     """
-    Updates scale_label and canvas.
+    Retrieves scale values and updates scale_label.
 
     Parameters
     ----------
@@ -46,31 +48,45 @@ def update(x):
     
     plot(wg, wp, wt)
 
+
+
 def plot(wg, wp, wt):
+    """
+    Plots the site suitability map in (0,255) scale based on selected weights
+
+    Parameters
+    ----------
+    wg : weight for geology factor
+    wp : weight for population factor
+    wt : weight for transportation factor
+
+    Returns
+    -------
+    None.
+
+    """
     
     # Clears figure
-    
     figure.clear()
-    w_geo = fw.weight(data_geo, wg)
-    w_pop = fw.weight(data_pop, wp)
-    w_trs = fw.weight(data_trs, wt)
     
-    # Combine all weighted factors through multiplication
-    suit = fw.combine(w_geo, w_pop, w_trs, wg, wp, wt)
-    # suit = []
-    # for i in zip(w_geo, w_pop, w_trs):
-    #     suit.append([x * y * z for x, y, z in zip(*i)]) 
+    # Read data from source files   
+    data_geo = io.read_data(geo)
+    data_pop = io.read_data(pop)
+    data_trs = io.read_data(trs)
+
+    # Apply weights and combine the three factors    
+    suit = fw.combine(data_geo, data_pop, data_trs, wg, wp, wt) 
          
-    # Plot suitability map
+    # Plot site suitability map
     ss_map = fw.rescale(suit)
-    plt.imshow(ss_map, cmap='YlGn')
+    plt.imshow(ss_map, cmap='YlGn') # sets Yellow-Green color scheme
     plt.grid(False)
-    plt.axis('off')
+    plt.axis('off') # removes axis labels
     plt.colorbar(label='Suitability')
     plt.title('Site Suitability Map')
-    plt.text(230, 60,'Geology=' + str(wg))
-    plt.text(230, 75,'Population=' + str(wp))
-    plt.text(230, 90,'Transportation=' + str(wt))
+    plt.text(200, 60,'Geology=' + str(wg))
+    plt.text(200, 75,'Population=' + str(wp))
+    plt.text(200, 90,'Transportation=' + str(wt))
     plt.show()
     
     # Draw on canvas
@@ -105,25 +121,12 @@ def exiting():
         # "TclError: can't invoke "destroy" command: application has been destroyed"
         pass
 
-     
-
-
-      
-# Initialise data : geology, population and transport suitability factors
-data_geo = io.read_data(geo)
-data_pop = io.read_data(pop)
-data_trs = io.read_data(trs)
-
-
-
 
 
 # Initialise figure
+figure = matplotlib.pyplot.figure(figsize=(6, 6))
 
-figure = matplotlib.pyplot.figure(figsize=(7, 7))
- 
 # GUI setup
-
 # Initialise GUI window    
 root = tk.Tk()
 
@@ -131,15 +134,10 @@ root = tk.Tk()
 label = tk.Label(root, text="Move sliders to choose weightage 1-10 for each factor. "
                  "Changes will be automatically applied", anchor="c")        
 
-
 # Create a canvas to display the figure
 canvas = FigureCanvasTkAgg(figure, master=root)
 
-
-
-
-
-# Create sliders
+# Create sliders to change weights
 scale1 = ttk.Scale(root, from_=1, to=10, command=update)
 scale1_label = ttk.Label(root, text= 'Geology')
 
@@ -152,10 +150,10 @@ scale3_label = ttk.Label(root, text= 'Transportation')
 # Create window title
 root.title("Site Suitability Map")
 
-# Create a Button widget and link this with the save function
+# Create a button widget and link this with the save function
 save_button = ttk.Button(root, text="Save", command=save)
 
-# Create a Button widget and link this with the exiting function
+# Create a button widget and link this with the exiting function
 exit_button = ttk.Button(root, text="Exit", command=exiting)
 
 # Exit if the window is closed.
@@ -173,7 +171,7 @@ scale3_label.pack()
 save_button.pack(side=tk.LEFT)
 exit_button.pack(side=tk.RIGHT)
 
-#root.pack(side="top", fill="both", expand=True)
+# Run GUI
 root.mainloop()
 
 

@@ -6,8 +6,9 @@ Created on Tue May  9 09:45:39 2023
 """
 
 import csv
-import matplotlib
+import random
 import matplotlib.pyplot as plt
+import time
 
 
 
@@ -44,6 +45,12 @@ def read_data(path):
     #print(data)
     return data
 
+
+
+#start = time.perf_counter()
+
+
+
 # Read and import site suitability factors: geology, population and transport
 data_geo = read_data(geo)
 data_pop = read_data(pop)
@@ -55,16 +62,20 @@ label = ["Geology", "Population", "Transportation"]
 data = [data_geo, data_pop, data_trs]
 
 for i in range(0,3):
-    ax[i].imshow(data[i])
+    ax[i].imshow(data[i], cmap='YlGn')
     ax[i].set_title(label[i])
     ax[i].set_axis_off()
     
 
+
 # Initialise weights
-wg = 1
-wp = 2
-wt = 3    
-    
+wg = random.randint(1, 10)
+wp = random.randint(1, 10)
+wt = random.randint(1, 10)    
+print('wg', wg)
+print('wp', wp)
+print('wt', wt)  
+  
 # Multiply geology factor with a weight
 w_geo = []
 for row in data_geo:
@@ -89,22 +100,25 @@ for row in data_trs:
 		row_trs.append(val*wt)
 	w_trs.append(row_trs)
 
-# Plot one weighted factor with scale for QC
+# Plot one weighted factor with scale for testing
 fig, ax = plt.subplots()
-cax = ax.imshow(w_geo, cmap='YlGn') 
+cax = ax.imshow(w_pop, cmap='YlGn') 
 fig.colorbar(cax).set_label("Suitability", rotation=270) 
-ax.set_title("Geology Weighted Factor")
+ax.set_title("Population Weighted Factor")
 cax.axes.get_xaxis().set_visible(False)
 cax.axes.get_yaxis().set_visible(False)
 
 
 
-# Combine all weighted factors through multiplication
+# Combine all weighted factors
 suit = []
-for i in zip(w_geo, w_pop, w_trs):
-    suit.append([x * y * z for x, y, z in zip(*i)]) 
+for row in range(len(w_geo)):
+    row_suit = []
+    suit.append(row_suit)
+    for val in range(len(w_geo[0])):
+        row_suit.append(w_geo[row][val] + w_pop[row][val] + w_trs[row][val])
     
-# Plot combined weighted factors for QC
+# Plot combined weighted factors for testing
 fig, ax = plt.subplots()
 cax = ax.imshow(suit, cmap='YlGn') 
 fig.colorbar(cax).set_label("Suitability", rotation=270) 
@@ -118,17 +132,25 @@ cax.axes.get_yaxis().set_visible(False)
 # Find max value
 max_suit = 0
 for row in suit:
+    max_row = max(row)
     for val in row:
-        max_row = max(row)
         max_suit = max(max_suit, max_row)
-#print("max", max_suit)
+print("max", max_suit)
+
+# Find min value
+min_suit = 0
+for row in suit:
+    min_row = min(row)
+    for val in row:
+        min_suit = min(min_suit, min_row)
+print("min", min_suit)
         
 # Rescale to (0,255)
 suit_map = []
 for row in suit:
     row_suit = []
     for val in row:
-        row_suit.append((val / max_suit) * 255)
+        row_suit.append((val - min_suit) / (max_suit - min_suit) * 255)
     suit_map.append(row_suit)    
     
 # Plot suitability map
@@ -137,7 +159,10 @@ cax = ax.imshow(suit_map, cmap='YlGn')
 fig.colorbar(cax).set_label("Suitability", rotation=270) 
 ax.set_title("Suitability Map")
 cax.axes.get_xaxis().set_visible(False)
-cax.axes.get_yaxis().set_visible(False)    
+cax.axes.get_yaxis().set_visible(False)   
+
+ 
         
-    
+#end = time.perf_counter()        
+#print("Time taken to plot", end - start, "seconds")    
     
