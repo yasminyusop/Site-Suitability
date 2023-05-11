@@ -1,7 +1,7 @@
 # Site-Suitability
 
 
-INTRODUCTION
+*INTRODUCTION*
 
 This software have been developed as part of the GEOG5990 Programming for Geographical Information Analysis: Core Skills of the University of Leeds. The objective is to develop a software to identify site suitability based on three factors: geology, population and transportation. 
 
@@ -112,6 +112,7 @@ Every set of codes were built on the previous one with adjustments and improveme
 	To optimise and simplify the main source code, a sub-folder named modules was created to store different function codes. The codes have also been generalised to allow usage on other applications.
 	
 	io.py: stores read_data() and write_data() functions to read and write CSV files
+
 	framework.py: stores combine() and rescale()
 
 	A plot() function was also created which groups all the codes needed from reading input data to plotting final rescaled suitability map. The optimisation of the software (compared to ss3) resulted in a difference of -0.02 seconds from reading the file to plotting the final map (plots of interim maps have been excluded).
@@ -125,26 +126,26 @@ CHALLENGES
 
 The following were among the challenges encountered while developing this software:
 
-	1. Manipulating list of lists using zip() function - this led to an incorrect calculation in combining the weighted factors and subsequently caused the final map not to be displayed correctly or even unable to be displayed. This error was not identified earlier as testing was done on only one set of weights. The error was identified when different sets of weights were used for plotting and no change was observed in the plots.  
+1. Manipulating list of lists using zip() function - this led to an incorrect calculation in combining the weighted factors and subsequently caused the final map not to be displayed correctly or even unable to be displayed. This error was not identified earlier as testing was done on only one set of weights. The error was identified when different sets of weights were used for plotting and no change was observed in the plots.  
 
-	2. Programming the software to retrieve the weights from scales which are called into the plot() function - the initial plot() function called for more variables like input data. The codes were revised several times to only have the weights as variables.
+2. Programming the software to retrieve the weights from scales which are called into the plot() function - the initial plot() function called for more variables like input data. The codes were revised several times to only have the weights as variables.
 
-	3. Management of GUI widgets and layout - the placement of codes for the widgets resulted in some widgets not being displayed. The codes for the widgets were finally arranged according to view from top to bottom. Additionally, adding the function figure.clear() ensured that the software cleared the earlier plot so that the new plot is visible.
+3. Management of GUI widgets and layout - the placement of codes for the widgets resulted in some widgets not being displayed. The codes for the widgets were finally arranged according to view from top to bottom. Additionally, adding the function figure.clear() ensured that the software cleared the earlier plot so that the new plot is visible.
 
-	4. Displaying suitable colorbar - the preferred colorbar for the suitability map is Red-Yellow-Green which is not available as a default colormap in the matplotlib library. The 'YlGn' colormap was chosen instead where Yellow represents low suitabililty and Green is high suitability.
+4. Displaying suitable colorbar - the preferred colorbar for the suitability map is Red-Yellow-Green which is not available as a default colormap in the matplotlib library. The 'YlGn' colormap was chosen instead where Yellow represents low suitabililty and Green is high suitability.
 
-	5. Plot not displaying on GUI - this was due to two reasons. Firstly was because of the incorrect calculation mentioned previously. Secondly was due to the presence of two matplotlib plots. After removing the interim map, the final suitability map was successfully displayed.
+5. Plot not displaying on GUI - this was due to two reasons. Firstly was because of the incorrect calculation mentioned previously. Secondly was due to the presence of two matplotlib plots. After removing the interim map, the final suitability map was successfully displayed.
    	
 
 FURTHER IMPROVEMENTS
 
-	1. Colorbar colormap - to have the preferred visualisation of the output, a customised colormap will need to be developed which is Red-Yellow-Green and data statistically classified into the different colors with Red being low suitability and Green being high suitability. 
+1. Colorbar colormap - to have the preferred visualisation of the output, a customised colormap will need to be developed which is Red-Yellow-Green and data statistically classified into the different colors with Red being low suitability and Green being high suitability. 
 
-	2. Explore other python modules like pandas or numpy - as an alternative to using loops.
+2. Explore other python modules like pandas or numpy - as an alternative to using loops.
 
-	3. Develop a code and widget on the GUI to source input data from other files. 
+3. Develop a code and widget on the GUI to source input data from other files. 
 
-	4. Develop a code for Save() function to rename the output image based on weights applied.
+4. Develop a code for Save() function to rename the output image based on weights applied.
 
 
 REFERENCES
